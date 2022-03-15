@@ -50,5 +50,20 @@ public class WordleExtractMasterFile
         return wordleMasterList.get((int)(Math.random() * wordleMasterList.size()));
     }
 
+    public boolean isValid(String word)
+    {
+        for(int i=0; i < wordleMasterList.size(); i++) {
+
+            if (word.equals(wordleMasterList.get(i))) {
+                System.out.println("Yay your word: " + word + " Was found.");
+
+
+                return true;
+            }
+        }
+        System.out.println("Sorry your word: " + word + " Wasn't found.");
+        return false;
+    }
+
 }
 
