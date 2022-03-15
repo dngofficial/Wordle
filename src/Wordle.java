@@ -2,9 +2,10 @@ public class Wordle
 {
 
     final String GREEN = "\033[0;32m";
-    final String BLACK = "\u001B[30m";
     final String RESET = "\u001B[0m";
     final String YELLOW = "\u001B[33m";
+    final String GRAY = "\u001B[37m";
+
 
     public void instructions()
     {
@@ -22,7 +23,7 @@ public class Wordle
                 System.out.println("P" + YELLOW  + "I" + RESET + "LLS");
                 System.out.println(RESET + "The letter I is in the word but in the wrong spot.");
                 System.out.println("-----------------------------------------------");
-                System.out.println("VAG" + BLACK + "U" + RESET + "E");
+                System.out.println("VAG" + GRAY + "U" + RESET + "E");
                 System.out.println("The letter U is not in the word in any spot.");
 
     }

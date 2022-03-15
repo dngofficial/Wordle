@@ -57,7 +57,6 @@ public class WordleExtractMasterFile
             if (word.equals(wordleMasterList.get(i))) {
                 System.out.println("Yay your word: " + word + " Was found.");
 
-
                 return true;
             }
         }
