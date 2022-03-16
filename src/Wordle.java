@@ -1,14 +1,18 @@
+import java.util.Scanner;
+
 public class Wordle
 {
-
     final String GREEN = "\033[0;32m";
     final String RESET = "\u001B[0m";
     final String YELLOW = "\u001B[33m";
     final String GRAY = "\u001B[37m";
 
-
     public void instructions()
     {
+
+        System.out.println("Do you want to skip the instructions (y/n): ");
+
+
         System.out.println("Guess the WORDLE in six tries.\n" +
                 "\n" +
                 "Each guess must be a valid five-letter word. Hit the enter button to submit when prompted too.\n" +
@@ -26,5 +30,13 @@ public class Wordle
                 System.out.println("VAG" + GRAY + "U" + RESET + "E");
                 System.out.println("The letter U is not in the word in any spot.");
 
+    }
+
+    public void gameplayLoop()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+
+        }
     }
 }
