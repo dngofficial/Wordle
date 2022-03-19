@@ -1,3 +1,4 @@
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Wordle
@@ -6,6 +7,20 @@ public class Wordle
     final String RESET = "\u001B[0m";
     final String YELLOW = "\u001B[33m";
     final String GRAY = "\u001B[37m";
+
+    private Letter[][] wordleBoard;
+
+    public Wordle()
+    {
+        wordleBoard = new Letter[6][5];
+
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 5; col++) {
+                wordleBoard[row][col] = new Letter("_", "reset");
+            }
+        }
+
+    }
 
     public void instructions()
     {
@@ -39,4 +54,44 @@ public class Wordle
 
         }
     }
+
+//    public boolean inCorrectSpot
+
+    public String[] stringToArray(String word)
+    {
+        String[] returnArr = new String[word.length()];
+
+        for (int i = 0; i < word.length()- 1; i++)
+        {
+
+            returnArr[i] = word.substring(i, i + 1).toUpperCase();
+        }
+
+        returnArr[word.length() - 1] = word.substring(word.length() - 1).toUpperCase();
+
+        return returnArr;
+    }
+
+    public void drawBoard()
+    {
+        for (int row = 0; row < 6; row++)
+        {
+            System.out.println(RESET + "----------------------");
+            System.out.print(RESET + "| ");
+            for (int col = 0; col < 5; col++)
+            {
+                wordleBoard[row][col].printOutLetter();
+                System.out.print(RESET + " | ");
+            }
+            System.out.println("");
+        }
+        System.out.println(RESET + "----------------------");
+
+    }
+
+    public Letter[][] returnWordleBoard()
+    {
+        return wordleBoard;
+    }
+
 }
