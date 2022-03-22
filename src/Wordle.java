@@ -12,6 +12,7 @@ public class Wordle
     private final String solutionAsAnArray[];
     private final String solution;
     private WordleExtractMasterFile extractWordle;
+    private Scanner scanner;
 
     public Wordle()
     {
@@ -28,13 +29,12 @@ public class Wordle
         solution =  extractWordle.getTheAnswer().toUpperCase();
         solutionAsAnArray = stringToArray(solution);
 
+        scanner = new Scanner(System.in);  // Create a Scanner object
+
     }
 
     public void instructions()
     {
-
-        System.out.println("Do you want to skip the instructions (y/n): ");
-
 
         System.out.println("Guess the WORDLE in six tries.\n" +
                 "\n" +
@@ -53,26 +53,27 @@ public class Wordle
                 System.out.println("VAG" + GRAY + "U" + RESET + "E");
                 System.out.println("The letter U is not in the word in any spot.");
 
+        String placeholder = scanner.nextLine();
+
     }
 
     public void gameplayLoop()
     {
-        Scanner scanner = new Scanner(System.in);  // Create a Scanner object
 
         instructions();
+        drawBoard();
         for (int i = 0; i < 6; i++)
         {
-            drawBoard();
-            System.out.println("The solution word: " + solution);
-            System.out.println(Arrays.toString(solutionAsAnArray));
             String guess = "";
             while(!extractWordle.isValid(guess))
             {
-                System.out.println("What's your guess? (Has to be a valid 5 letter word");
+                System.out.println("What's your guess? (Has to be a valid 5 letter word): ");
                 guess = scanner.nextLine();
             }
 
             fillOutLine(i, guess);
+
+            drawBoard();
 
             if(guess.toUpperCase().equals(solution))
             {

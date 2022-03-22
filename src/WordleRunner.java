@@ -9,7 +9,7 @@ public class WordleRunner
 //        System.out.println(answer);
 //
         Wordle wordle = new Wordle();
-        wordle.instructions();
+
 //
 //        Letter letter = new Letter("T", "yellow");
 //
