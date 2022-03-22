@@ -1,4 +1,4 @@
-import java.util.Locale;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Wordle
@@ -8,7 +8,10 @@ public class Wordle
     final String YELLOW = "\u001B[33m";
     final String GRAY = "\u001B[37m";
 
-    private Letter[][] wordleBoard;
+    private final Letter[][] wordleBoard;
+    private final String solutionAsAnArray[];
+    private final String solution;
+    private WordleExtractMasterFile extractWordle;
 
     public Wordle()
     {
@@ -19,6 +22,11 @@ public class Wordle
                 wordleBoard[row][col] = new Letter("_", "reset");
             }
         }
+
+         extractWordle = new WordleExtractMasterFile();
+
+        solution =  extractWordle.getTheAnswer().toUpperCase();
+        solutionAsAnArray = stringToArray(solution);
 
     }
 
@@ -49,9 +57,29 @@ public class Wordle
 
     public void gameplayLoop()
     {
+        Scanner scanner = new Scanner(System.in);  // Create a Scanner object
+
+        instructions();
         for (int i = 0; i < 6; i++)
         {
+            drawBoard();
+            System.out.println("The solution word: " + solution);
+            System.out.println(Arrays.toString(solutionAsAnArray));
+            String guess = "";
+            while(!extractWordle.isValid(guess))
+            {
+                System.out.println("What's your guess? (Has to be a valid 5 letter word");
+                guess = scanner.nextLine();
+            }
 
+            fillOutLine(i, guess);
+
+            if(guess.toUpperCase().equals(solution))
+            {
+                drawBoard();
+                System.out.println("Wow you solved the wordle!");
+                break;
+            }
         }
     }
 
@@ -93,5 +121,64 @@ public class Wordle
     {
         return wordleBoard;
     }
+
+    public boolean isInCorrectSpot(int idx, String guess)
+    {
+        String[] guessArr = stringToArray(guess);
+        if (guessArr[idx].equals( solutionAsAnArray[idx]))
+        {
+            return true;
+        }
+        else {
+
+            return false;
+
+        }
+    }
+
+    public boolean isInTheGuessButInCorrectSpot(int idx, String guess)
+    {
+        boolean inCorrectSpot = false;
+        String[] guessArr = stringToArray(guess);
+        for (int i = 0; i < 5; i++)
+        {
+            if (guessArr[idx].equals(solutionAsAnArray[i]))
+            {
+                inCorrectSpot = true;
+            }
+        }
+        if (inCorrectSpot && !isInCorrectSpot(idx, guess))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+
+        }
+    }
+
+    public void fillOutLine(int row, String guess)
+    {
+        guess = guess.toUpperCase();
+        String[] guessArr = stringToArray(guess);
+        for (int col = 0; col < 5; col++)
+        {
+            if(isInCorrectSpot(col, guess))
+            {
+                wordleBoard[row][col] = new Letter(guessArr[col], "green");
+            }
+            else if(isInTheGuessButInCorrectSpot(col, guess) && !isInCorrectSpot(col, guess))
+            {
+                wordleBoard[row][col] = new Letter(guessArr[col], "yellow");
+            }
+            else
+            {
+                wordleBoard[row][col] = new Letter(guessArr[col], "gray");
+            }
+        }
+    }
+
+
 
 }

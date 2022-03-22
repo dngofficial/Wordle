@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class WordleExtractMasterFile
 {
@@ -50,17 +51,16 @@ public class WordleExtractMasterFile
         return wordleMasterList.get((int)(Math.random() * wordleMasterList.size()));
     }
 
-    public boolean isValid(String word)
+    public boolean isValid(String guess)
     {
+        String word = guess.toLowerCase();
         for(int i=0; i < wordleMasterList.size(); i++) {
 
             if (word.equals(wordleMasterList.get(i))) {
-                System.out.println("Yay your word: " + word + " Was found.");
 
                 return true;
             }
         }
-        System.out.println("Sorry your word: " + word + " Wasn't found.");
         return false;
     }
 
