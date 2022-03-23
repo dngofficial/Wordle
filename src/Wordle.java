@@ -82,6 +82,9 @@ public class Wordle
                 break;
             }
         }
+
+        System.out.println("Looks like you didn't solve the worlde in 6 tries! The actual word was " + GREEN + solution.toUpperCase());
+
     }
 
 //    public boolean inCorrectSpot
