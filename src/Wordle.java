@@ -14,6 +14,7 @@ public class Wordle
     private WordleExtractMasterFile extractWordle;
     private Scanner scanner;
 
+
     public Wordle()
     {
         wordleBoard = new Letter[6][5];
@@ -26,7 +27,7 @@ public class Wordle
 
          extractWordle = new WordleExtractMasterFile();
 
-        solution =  extractWordle.getTheAnswer().toUpperCase();
+        solution = extractWordle.getTheAnswer().toUpperCase();
         solutionAsAnArray = stringToArray(solution);
 
         scanner = new Scanner(System.in);  // Create a Scanner object
@@ -53,6 +54,8 @@ public class Wordle
                 System.out.println("VAG" + GRAY + "U" + RESET + "E");
                 System.out.println("The letter U is not in the word in any spot.");
 
+                System.out.print("Press enter to continue.");
+
         String placeholder = scanner.nextLine();
 
     }
@@ -77,9 +80,8 @@ public class Wordle
 
             if(guess.toUpperCase().equals(solution))
             {
-                drawBoard();
                 System.out.println("Wow you solved the wordle!");
-                break;
+                System.exit(0);
             }
         }
 
@@ -181,6 +183,8 @@ public class Wordle
             }
         }
     }
+
+    public boolean detectDuplicateo
 
 
 
