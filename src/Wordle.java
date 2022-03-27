@@ -13,6 +13,7 @@ public class Wordle
     private final String solution;
     private WordleExtractMasterFile extractWordle;
     private Scanner scanner;
+    private boolean validCheckToggle;
 
 
     public Wordle()
@@ -58,6 +59,19 @@ public class Wordle
 
         String placeholder = scanner.nextLine();
 
+
+
+
+
+            System.out.println("Do you want to play with valid word checks (1) or use any 5 letter word you want (2)?:  ");
+             String toggle = scanner.nextLine();
+
+
+        if (toggle.equals("1"))
+        {
+            validCheckToggle = true;
+        }
+
     }
 
     public void gameplayLoop()
@@ -68,10 +82,27 @@ public class Wordle
         for (int i = 0; i < 6; i++)
         {
             String guess = "";
-            while(!extractWordle.isValid(guess))
+            boolean checker = false;
+            while(!checker)
             {
-                System.out.println("What's your guess? (Has to be a valid 5 letter word): ");
-                guess = scanner.nextLine();
+            if (validCheckToggle)
+            {
+                checker = extractWordle.isValid(guess);
+            }
+            else
+            {
+               checker = guess.length() > 5;
+            }
+
+                if (validCheckToggle) {
+                    System.out.println("What's your guess? (Has to be a valid 5 letter word): ");
+                    guess = scanner.nextLine();
+                }
+                else
+                {
+                    System.out.println("What's your guess? (Has to be a 5 letter word): ");
+                    guess = scanner.nextLine();
+                }
             }
 
             fillOutLine(i, guess);
@@ -163,28 +194,107 @@ public class Wordle
 
         }
     }
+
+    public boolean oneOfAKind(int idx, String guess)
+    {
+        String[] guessArr = stringToArray(guess);
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (guessArr[i].equals(guessArr[idx]) && i != idx)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean oneOfAKind(String letter, String guess)
+    {
+        String[] guessArr = stringToArray(guess);
+        int counter = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (guessArr[i].equals(letter))
+            {
+                counter ++;
+            }
+        }
+        if (counter == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public boolean duplicates(int idx, String guess)
+    {
+        String[] guessArr = stringToArray(guess);
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (guessArr[i].equals(guessArr[idx]) && i != idx)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean duplicates(String letter, String guess)
+    {
+        String[] guessArr = stringToArray(guess);
+        int counter = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (guessArr[i].equals(letter))
+            {
+                counter ++;
+            }
+        }
+        if (counter != 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public void fillOutLine(int row, String guess)
     {
         guess = guess.toUpperCase();
         String[] guessArr = stringToArray(guess);
         for (int col = 0; col < 5; col++)
         {
-            if(isInCorrectSpot(col, guess))
-            {
-                wordleBoard[row][col] = new Letter(guessArr[col], "green");
-            }
-            else if(isInTheGuessButInCorrectSpot(col, guess) && !isInCorrectSpot(col, guess))
-            {
-                wordleBoard[row][col] = new Letter(guessArr[col], "yellow");
-            }
-            else
-            {
-                wordleBoard[row][col] = new Letter(guessArr[col], "gray");
-            }
+            String letter = guessArr[col];
+
+                if (isInCorrectSpot(col, guess))
+                {
+                    wordleBoard[row][col] = new Letter(guessArr[col], "green");
+                }
+                else if (isInTheGuessButInCorrectSpot(col, guess) && !isInCorrectSpot(col, guess) && duplicates(col, guess) && oneOfAKind(letter, solution))
+                {
+
+                    wordleBoard[row][col] = new Letter(guessArr[col], "gray");
+                }
+                else if (isInTheGuessButInCorrectSpot(col, guess) && !isInCorrectSpot(col, guess))
+                {
+
+                    wordleBoard[row][col] = new Letter(guessArr[col], "yellow");
+                }
+                else
+                {
+
+                    wordleBoard[row][col] = new Letter(guessArr[col], "gray");
+                }
+
         }
     }
 
-    public boolean detectDuplicateo
 
 
 
