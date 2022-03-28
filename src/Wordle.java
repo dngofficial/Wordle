@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Wordle
@@ -8,14 +7,20 @@ public class Wordle
     final String YELLOW = "\u001B[33m";
     final String GRAY = "\u001B[37m";
 
-    private final Letter[][] wordleBoard;
-    private final String solutionAsAnArray[];
-    private final String solution;
+    private Letter[][] wordleBoard;
+    private String solutionAsAnArray[];
+    private String solution;
     private WordleExtractMasterFile extractWordle;
     private Scanner scanner;
+
+    /**
+     * Boolean value for whether the player wants to play with valid word checker or they can use whatever 5 letter word they want.
+     */
     private boolean validCheckToggle;
 
-
+    /**
+     * Initializes the wordle array and fills it out with empty Letters. Also, randomly generates the solution for the wordle.
+     */
     public Wordle()
     {
         wordleBoard = new Letter[6][5];
@@ -33,8 +38,13 @@ public class Wordle
 
         scanner = new Scanner(System.in);  // Create a Scanner object
 
+        validCheckToggle = false;
+
     }
 
+    /**
+     * Instructions for the wordle game. Also, checker for playing with valid word checks or not.
+     */
     public void instructions()
     {
 
@@ -59,13 +69,19 @@ public class Wordle
 
         String placeholder = scanner.nextLine();
 
+        String toggle = "";
+        boolean checker = true;
 
+        while(checker)
+        {
+            System.out.print("Do you want to play with valid word checks (1) or use any 5 letter word you want (2)?:  ");
+              toggle = scanner.nextLine();
 
-
-
-            System.out.println("Do you want to play with valid word checks (1) or use any 5 letter word you want (2)?:  ");
-             String toggle = scanner.nextLine();
-
+              if (toggle.equals("2") || toggle.equals("1"))
+            {
+                checker = false;
+            }
+        }
 
         if (toggle.equals("1"))
         {
@@ -74,6 +90,9 @@ public class Wordle
 
     }
 
+    /**
+     * The primary gameplay loop. Takes and processes the guesses.
+     */
     public void gameplayLoop()
     {
 
@@ -87,21 +106,15 @@ public class Wordle
             {
             if (validCheckToggle)
             {
-                checker = extractWordle.isValid(guess);
-            }
-            else
-            {
-               checker = guess.length() > 5;
-            }
-
-                if (validCheckToggle) {
                     System.out.println("What's your guess? (Has to be a valid 5 letter word): ");
                     guess = scanner.nextLine();
+                checker = extractWordle.isValid(guess);
                 }
                 else
                 {
                     System.out.println("What's your guess? (Has to be a 5 letter word): ");
                     guess = scanner.nextLine();
+                    checker = guess.length() == 5;
                 }
             }
 
@@ -120,8 +133,11 @@ public class Wordle
 
     }
 
-//    public boolean inCorrectSpot
-
+    /**
+     *  Converts a word into a String array composed of uppercase letters from that word.
+     * @param word A word.
+     * @return A string array composed of the single letters of the word.
+     */
     public String[] stringToArray(String word)
     {
         String[] returnArr = new String[word.length()];
@@ -137,6 +153,9 @@ public class Wordle
         return returnArr;
     }
 
+    /**
+     * Prints out the wordle board.
+     */
     public void drawBoard()
     {
         for (int row = 0; row < 6; row++)
@@ -154,11 +173,12 @@ public class Wordle
 
     }
 
-    public Letter[][] returnWordleBoard()
-    {
-        return wordleBoard;
-    }
-
+    /**
+     *
+     * @param idx
+     * @param guess
+     * @return True or false based if the current letter at the index of the guess string is in the correct spot in conjunction with the solution.
+     */
     public boolean isInCorrectSpot(int idx, String guess)
     {
         String[] guessArr = stringToArray(guess);
@@ -173,6 +193,12 @@ public class Wordle
         }
     }
 
+    /**
+     *
+     * @param idx
+     * @param guess
+     * @return True or false based if the current letter at the index of the guess string is in the guess, but not the right spot in conjunction with the solution.
+     */
     public boolean isInTheGuessButInCorrectSpot(int idx, String guess)
     {
         boolean inCorrectSpot = false;
@@ -195,21 +221,13 @@ public class Wordle
         }
     }
 
-    public boolean oneOfAKind(int idx, String guess)
-    {
-        String[] guessArr = stringToArray(guess);
-
-        for (int i = 0; i < 5; i++)
-        {
-            if (guessArr[i].equals(guessArr[idx]) && i != idx)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean oneOfAKind(String letter, String guess)
+    /**
+     * The number of duplicates there are of a letter within the guess string.
+     * @param letter
+     * @param guess
+     * @return Duplicate total count
+     */
+    public int duplicatesCountTotal(String letter, String guess)
     {
         String[] guessArr = stringToArray(guess);
         int counter = 0;
@@ -217,31 +235,35 @@ public class Wordle
         {
             if (guessArr[i].equals(letter))
             {
-                counter ++;
+                counter++;
             }
         }
-        if (counter == 1)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return counter;
     }
 
-    public boolean duplicates(int idx, String guess)
+    /**
+     * Returns the current number of a duplicate considering that there are multiple of the same letter.
+     * @param idx
+     * @param guess
+     * @return Current duplicate iteration.
+     */
+    public int currentDuplicate(int idx, String guess)
     {
         String[] guessArr = stringToArray(guess);
-
+        int counter = 0;
         for (int i = 0; i < 5; i++)
         {
-            if (guessArr[i].equals(guessArr[idx]) && i != idx)
+            if (guessArr[i].equals(guessArr[idx]) && i >= idx)
             {
-                return true;
+                counter ++;
+            }
+            if (i == idx)
+            {
+                counter++;
+                return counter;
             }
         }
-        return false;
+        return counter;
     }
 
     public boolean duplicates(String letter, String guess)
@@ -264,6 +286,13 @@ public class Wordle
             return false;
         }
     }
+
+    /**
+     * The main logic for how the wordle is played out. Fills out completely a row on the wordle board and determines what color the letter will be in conjunction to a number of factors
+     * in comparison with the solution.
+     * @param row
+     * @param guess
+     */
     public void fillOutLine(int row, String guess)
     {
         guess = guess.toUpperCase();
@@ -276,9 +305,8 @@ public class Wordle
                 {
                     wordleBoard[row][col] = new Letter(guessArr[col], "green");
                 }
-                else if (isInTheGuessButInCorrectSpot(col, guess) && !isInCorrectSpot(col, guess) && duplicates(col, guess) && oneOfAKind(letter, solution))
+                else if (duplicates(letter, guess) && isInTheGuessButInCorrectSpot(col, guess) && !isInCorrectSpot(col, guess) && currentDuplicate(col, guess) > duplicatesCountTotal(letter, solution))
                 {
-
                     wordleBoard[row][col] = new Letter(guessArr[col], "gray");
                 }
                 else if (isInTheGuessButInCorrectSpot(col, guess) && !isInCorrectSpot(col, guess))
@@ -286,6 +314,7 @@ public class Wordle
 
                     wordleBoard[row][col] = new Letter(guessArr[col], "yellow");
                 }
+
                 else
                 {
 
@@ -294,8 +323,5 @@ public class Wordle
 
         }
     }
-
-
-
 
 }

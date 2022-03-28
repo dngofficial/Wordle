@@ -14,11 +14,9 @@ public class WordleExtractMasterFile
         importWordleMasterList();
     }
 
-    public ArrayList<String> getWordleMasterList()
-    {
-        return wordleMasterList;
-    }
-
+    /**
+     * Scans the word list and puts it's into a word list. Not in alphabetical order.
+     */
     private void importWordleMasterList()
     {
         String[] tmp = null;
@@ -45,12 +43,20 @@ public class WordleExtractMasterFile
         wordleMasterList = new ArrayList<String>(Arrays.asList(tmp));
     }
 
-
+    /**
+     * Randomly selects a word from the masterlist of words.
+     * @return A random words.
+     */
     public String getTheAnswer()
     {
         return wordleMasterList.get((int)(Math.random() * wordleMasterList.size()));
     }
 
+    /**
+     * Checks if the word is in the master list.
+     * @param guess
+     * @return true or false
+     */
     public boolean isValid(String guess)
     {
         String word = guess.toLowerCase();
